@@ -14,7 +14,7 @@ import (
 // Envelope Response
 type Envelope struct {
 	XMLName xml.Name `xml:"Envelope"`
-	Body *Body `xml:"Body"`
+	Body    *Body    `xml:"Body"`
 }
 
 type Body struct {
@@ -39,10 +39,10 @@ type KeyRates struct {
 
 // GetKeyRateXMLRequest Request
 type GetKeyRateXMLRequest struct {
-	XMLName xml.Name `xml:"KeyRateXML"`
-	Xmlns string `xml:"xmlns,attr"`
-	FromDate string `xml:"fromDate"`
-	ToDate string `xml:"ToDate"`
+	XMLName  xml.Name `xml:"KeyRateXML"`
+	Xmlns    string   `xml:"xmlns,attr"`
+	FromDate string   `xml:"fromDate"`
+	ToDate   string   `xml:"ToDate"`
 }
 
 func KeyRateByDate(fromDate time.Time, toDate time.Time) (Envelope, error) {
@@ -66,10 +66,10 @@ type SoapBody struct {
 
 type SoapRoot struct {
 	XMLName xml.Name `xml:"soap12:Envelope"`
-	Xsi    string `xml:"xmlns:xsi,attr"`
-	Xsd    string `xml:"xmlns:xsd,attr"`
-	Soap12 string `xml:"xmlns:soap12,attr"`
-	Body   SoapBody
+	Xsi     string   `xml:"xmlns:xsi,attr"`
+	Xsd     string   `xml:"xmlns:xsd,attr"`
+	Soap12  string   `xml:"xmlns:soap12,attr"`
+	Body    SoapBody
 }
 
 func SoapCall(service string, request interface{}) string {
