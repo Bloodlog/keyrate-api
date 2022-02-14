@@ -5,22 +5,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"key-rate-api/src/Routes"
+
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPingRoute(t *testing.T) {
-	router := setupRouter()
-
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/ping", nil)
-	router.ServeHTTP(w, req)
-
-	assert.Equal(t, 200, w.Code)
-	assert.Equal(t, "pong", w.Body.String())
-}
-
 func TestKeyrateRoute(t *testing.T) {
-	router := setupRouter()
+	router := Routes.SetUpRouter()
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/keyrate", nil)
