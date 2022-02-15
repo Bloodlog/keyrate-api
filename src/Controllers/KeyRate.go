@@ -59,5 +59,6 @@ func KeyRate(c *gin.Context) {
 		"current_page": currentPageNumberInt,
 		"per_page":     PerPage,
 		"total_pages":  totalPages,
+		"from_date":    fromDate,
 	})
 }
