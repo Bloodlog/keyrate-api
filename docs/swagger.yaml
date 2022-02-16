@@ -1,0 +1,37 @@
+info:
+  contact: {}
+paths:
+  /keyrate:
+    get:
+      description: Return keyrates
+      parameters:
+      - description: return keyrates from date
+        format: "2006-01-02"
+        in: query
+        name: fromDate
+        type: string
+      - description: Page number
+        format: "2"
+        in: query
+        name: page
+        type: integer
+      - description: Key rates per page
+        format: "10"
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: ""
+        "404":
+          description: ""
+        "500":
+          description: ""
+      summary: Show key rates
+      tags:
+      - keyrate
+swagger: "2.0"

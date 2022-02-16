@@ -11,6 +11,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// KeyRate godoc
+// @Summary      Show key rates
+// @Description  Return keyrates
+// @Tags         keyrate
+// @Produce      json
+// @Param        fromDate    query     string  false  "return keyrates from date"  Format(2006-01-02)
+// @Param        page    query     integer  false  "Page number"  Format(2)
+// @Param        per_page    query     integer  false  "Key rates per page"  Format(10)
+// @Success      200
+// @Failure      400
+// @Failure      404
+// @Failure      500
+// @Router       /keyrate [get]
 func KeyRate(c *gin.Context) {
 	layout := "2006-01-02"
 	fromDate := c.DefaultQuery("fromDate", time.Now().Format(layout))

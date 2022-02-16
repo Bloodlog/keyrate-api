@@ -59,3 +59,6 @@ PARAMS | ?fromDate=2021-12-01 | возвращает ключевую ставк
 PARAMS | page=2 | Возвращает страницу 2
 
 PARAMS | per_page=5 | Количество возвращаемых строк на одну страницу
+
+
+Swagger http://localhost:8080/swagger/index.html
