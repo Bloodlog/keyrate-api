@@ -38,7 +38,7 @@ var doc = `{
                         "type": "string",
                         "format": "2006-01-02",
                         "description": "return keyrates from date",
-                        "name": "fromDate",
+                        "name": "from_date",
                         "in": "query"
                     },
                     {

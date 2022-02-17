@@ -33,7 +33,7 @@ paths:
       - description: return keyrates from date
         format: "2006-01-02"
         in: query
-        name: fromDate
+        name: from_date
         type: string
       - description: Page number
         format: "2"

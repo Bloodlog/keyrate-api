@@ -5,6 +5,10 @@ import (
 	"math"
 )
 
+type Pager interface {
+	Paginate(p *Pages) Pagineted
+}
+
 type Pages struct {
 	Items       []client.KeyRates
 	Total       int
