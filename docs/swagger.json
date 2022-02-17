@@ -39,17 +39,68 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": ""
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Controllers.Success"
+                            }
+                        }
                     },
                     "400": {
-                        "description": ""
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "error"
+                        }
                     },
                     "404": {
                         "description": ""
                     },
                     "500": {
-                        "description": ""
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "error"
+                        }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Controllers.Success": {
+            "type": "object",
+            "properties": {
+                "current_page": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/client.KeyRates"
+                    }
+                },
+                "from_date": {
+                    "type": "string"
+                },
+                "per_page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
+                }
+            }
+        },
+        "client.KeyRates": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "rate": {
+                    "type": "string"
                 }
             }
         }

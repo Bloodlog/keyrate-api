@@ -45,6 +45,15 @@ type GetKeyRateXMLRequest struct {
 	ToDate   string   `xml:"ToDate"`
 }
 
+type Requester interface {
+	GetData()
+}
+
+func GetData(fromDate time.Time, toDate time.Time) ([]KeyRates, error) {
+	data, error := KeyRateByDate(fromDate, toDate)
+	return data.Body.Response.Result.Rows[0].KeyRates, error
+}
+
 func KeyRateByDate(fromDate time.Time, toDate time.Time) (Envelope, error) {
 	var request = GetKeyRateXMLRequest{}
 	request.Xmlns = "http://web.cbr.ru/"

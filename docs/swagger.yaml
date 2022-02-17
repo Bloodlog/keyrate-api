@@ -1,3 +1,28 @@
+definitions:
+  Controllers.Success:
+    properties:
+      current_page:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/client.KeyRates'
+        type: array
+      from_date:
+        type: string
+      per_page:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  client.KeyRates:
+    properties:
+      date:
+        type: string
+      rate:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -24,13 +49,21 @@ paths:
       - application/json
       responses:
         "200":
-          description: ""
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Controllers.Success'
+            type: array
         "400":
-          description: ""
+          description: Bad Request
+          schema:
+            type: error
         "404":
           description: ""
         "500":
-          description: ""
+          description: Internal Server Error
+          schema:
+            type: error
       summary: Show key rates
       tags:
       - keyrate

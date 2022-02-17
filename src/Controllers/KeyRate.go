@@ -1,9 +1,9 @@
 package Controllers
 
 import (
+	"key-rate-api/src/Helpers"
 	"key-rate-api/src/client"
 	"log"
-	"math"
 	"net/http"
 	"strconv"
 	"time"
@@ -11,22 +11,35 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Success struct {
+	Data        []client.KeyRates `json:"data"`
+	Total       int               `json:"total"`
+	CurrentPage int               `json:"current_page"`
+	PerPage     int               `json:"per_page"`
+	TotalPages  int               `json:"total_pages"`
+	FromDate    string            `json:"from_date"`
+}
+
+type Error struct {
+	Errors error `json:"errors"`
+}
+
 // KeyRate godoc
 // @Summary      Show key rates
 // @Description  Return keyrates
 // @Tags         keyrate
 // @Produce      json
-// @Param        fromDate    query     string  false  "return keyrates from date"  Format(2006-01-02)
+// @Param        from_date    query     string  false  "return keyrates from date"  Format(2006-01-02)
 // @Param        page    query     integer  false  "Page number"  Format(2)
 // @Param        per_page    query     integer  false  "Key rates per page"  Format(10)
-// @Success      200
-// @Failure      400
+// @Success      200  {array} Success
+// @Failure      400  error Error
 // @Failure      404
-// @Failure      500
+// @Failure      500  error Error
 // @Router       /keyrate [get]
 func KeyRate(c *gin.Context) {
 	layout := "2006-01-02"
-	fromDate := c.DefaultQuery("fromDate", time.Now().Format(layout))
+	fromDate := c.DefaultQuery("from_date", time.Now().Format(layout))
 	currentPageNumber := c.DefaultQuery("page", "1")
 	currentPageNumberInt, _ := strconv.Atoi(currentPageNumber)
 	perPageNumber := c.DefaultQuery("per_page", "3")
@@ -35,43 +48,37 @@ func KeyRate(c *gin.Context) {
 	t, err := time.Parse(layout, fromDate)
 	if err != nil {
 		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+		c.JSON(http.StatusBadRequest, Error{
+			Errors: err,
 		})
 		return
 	}
 
-	data, err := client.KeyRateByDate(t, time.Now())
+	dataKeyRates, err := client.GetData(t, time.Now())
 	if err != nil {
 		log.Println("error KeyRateByDate client")
 		log.Println(err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+		c.JSON(http.StatusInternalServerError, Error{
+			Errors: err,
 		})
 		return
 	}
 
-	dataKeyRates := data.Body.Response.Result.Rows[0].KeyRates
-	total := len(dataKeyRates)
-	totalPagesFloat := float64(total / PerPage)
-	totalPages := int(math.Ceil(totalPagesFloat))
+	var result Helpers.Pagineted
 
-	result := make([]client.KeyRates, 0)
-	startIndex := currentPageNumberInt * PerPage
-	endIndex := startIndex + PerPage
+	result = Helpers.Paginate(&Helpers.Pages{
+		Items:       dataKeyRates,
+		Total:       len(dataKeyRates),
+		PerPage:     PerPage,
+		CurrentPage: currentPageNumberInt,
+	})
 
-	for i := startIndex; i < endIndex; i++ {
-		if currentPageNumberInt <= totalPages && i <= total-1 {
-			result = append(result, dataKeyRates[i])
-		}
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"data":         result,
-		"total":        total,
-		"current_page": currentPageNumberInt,
-		"per_page":     PerPage,
-		"total_pages":  totalPages,
-		"from_date":    fromDate,
+	c.JSON(http.StatusOK, Success{
+		Data:        result.Data,
+		Total:       result.Total,
+		CurrentPage: result.CurrentPage,
+		PerPage:     result.PerPage,
+		TotalPages:  result.TotalPages,
+		FromDate:    fromDate,
 	})
 }
