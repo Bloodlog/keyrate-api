@@ -54,6 +54,13 @@ var doc = `{
                         "description": "Key rates per page",
                         "name": "per_page",
                         "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "format": "1",
+                        "description": "Force get last key rate. Max count retry 5",
+                        "name": "last_key_rate",
+                        "in": "query"
                     }
                 ],
                 "responses": {

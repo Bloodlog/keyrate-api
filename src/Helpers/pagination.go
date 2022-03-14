@@ -27,10 +27,14 @@ type Pagineted struct {
 func Paginate(p *Pages) Pagineted {
 	total := p.Total
 	totalPagesFloat := float64(p.Total / p.PerPage)
-	totalPages := int(math.Ceil(totalPagesFloat))
+	totalPages := max(int(math.Ceil(totalPagesFloat)), 1)
+	p.CurrentPage = max(p.CurrentPage, 1)
+	if p.CurrentPage > totalPages {
+		p.CurrentPage = totalPages
+	}
 
 	result := make([]client.KeyRates, 0)
-	startIndex := p.CurrentPage * p.PerPage
+	startIndex := (p.CurrentPage - 1) * p.PerPage
 	endIndex := startIndex + p.PerPage
 
 	for i := startIndex; i < endIndex; i++ {
@@ -46,4 +50,12 @@ func Paginate(p *Pages) Pagineted {
 		PerPage:     p.PerPage,
 		TotalPages:  totalPages,
 	}
+}
+
+func max(x int, y int) int {
+	if x < y {
+		return y
+	}
+
+	return x
 }

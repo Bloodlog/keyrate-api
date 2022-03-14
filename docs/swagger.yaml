@@ -45,6 +45,11 @@ paths:
         in: query
         name: per_page
         type: integer
+      - description: Force get last key rate. Max count retry 5
+        format: "1"
+        in: query
+        name: last_key_rate
+        type: integer
       produces:
       - application/json
       responses:

@@ -32,6 +32,7 @@ type Error struct {
 // @Param        from_date    query     string  false  "return keyrates from date"  Format(2006-01-02)
 // @Param        page    query     integer  false  "Page number"  Format(2)
 // @Param        per_page    query     integer  false  "Key rates per page"  Format(10)
+// @Param 			 last_key_rate query integer 0 "Force get last key rate. Max count retry 5" Format(1)
 // @Success      200  {array} Success
 // @Failure      400  error Error
 // @Failure      404
@@ -39,13 +40,15 @@ type Error struct {
 // @Router       /keyrate [get]
 func KeyRate(c *gin.Context) {
 	layout := "2006-01-02"
-	fromDate := c.DefaultQuery("from_date", time.Now().Format(layout))
-	currentPageNumber := c.DefaultQuery("page", "1")
-	currentPageNumberInt, _ := strconv.Atoi(currentPageNumber)
-	perPageNumber := c.DefaultQuery("per_page", "3")
-	PerPage, _ := strconv.Atoi(perPageNumber)
+	fromDateRequest := c.DefaultQuery("from_date", time.Now().Format(layout))
+	currentPageRequest := c.DefaultQuery("page", "1")
+	currentPageNumber, _ := strconv.Atoi(currentPageRequest)
+	perPageRequest := c.DefaultQuery("per_page", "15")
+	PerPage, _ := strconv.Atoi(perPageRequest)
+	lastKeyRateRequest := c.DefaultQuery("last_key_rate", "0")
+	ForceLastKeyRate, _ := strconv.Atoi(lastKeyRateRequest)
 
-	t, err := time.Parse(layout, fromDate)
+	fromDate, err := time.Parse(layout, fromDateRequest)
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, Error{
@@ -54,7 +57,7 @@ func KeyRate(c *gin.Context) {
 		return
 	}
 
-	dataKeyRates, err := client.GetData(t, time.Now())
+	dataKeyRates, err := client.GetData(fromDate, time.Now())
 	if err != nil {
 		log.Println("error KeyRateByDate client")
 		log.Println(err)
@@ -64,13 +67,32 @@ func KeyRate(c *gin.Context) {
 		return
 	}
 
+	if ForceLastKeyRate == 1 {
+		maxTry := 5
+		for i := 0; i < maxTry; i++ {
+			fromDatesubDay := fromDate.AddDate(0, 0, -1)
+			dataKeyRates, err = client.GetData(fromDatesubDay, time.Now())
+			if err != nil {
+				log.Println("error KeyRateByDate client")
+				log.Println(err)
+				c.JSON(http.StatusInternalServerError, Error{
+					Errors: err,
+				})
+				return
+			}
+			if len(dataKeyRates) != 0 {
+				break
+			}
+		}
+	}
+
 	var result Helpers.Pagineted
 
 	result = Helpers.Paginate(&Helpers.Pages{
 		Items:       dataKeyRates,
 		Total:       len(dataKeyRates),
 		PerPage:     PerPage,
-		CurrentPage: currentPageNumberInt,
+		CurrentPage: currentPageNumber,
 	})
 
 	c.JSON(http.StatusOK, Success{
@@ -79,6 +101,6 @@ func KeyRate(c *gin.Context) {
 		CurrentPage: result.CurrentPage,
 		PerPage:     result.PerPage,
 		TotalPages:  result.TotalPages,
-		FromDate:    fromDate,
+		FromDate:    fromDateRequest,
 	})
 }
