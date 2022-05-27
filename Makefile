@@ -1,12 +1,8 @@
-install:
-		go get .
+build:
+		go mod download
+run:build
+		go run cmd/app/main.go
 swag:
-		swag init
-setup:
-		make swag
-		go build
-run:
-		make setup
-	  go run key-rate-api
-run-dev:
-		go run main.go
+		swag init -g cmd/app/main.go
+test:
+	  go test -v ./...

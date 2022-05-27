@@ -1,7 +1,7 @@
-package Routes
+package router
 
 import (
-	Controller "key-rate-api/src/Controllers"
+	"key-rate-api/internal/app/controllers"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
@@ -25,7 +25,7 @@ func SetUpRouter() *gin.Engine {
 	router := gin.Default()
 	v1 := router.Group("/v1")
 	{
-		v1.GET("/keyrate", Controller.KeyRate)
+		v1.GET("/keyrate", controllers.KeyRate)
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

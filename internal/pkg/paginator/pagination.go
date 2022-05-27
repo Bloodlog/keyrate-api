@@ -1,7 +1,7 @@
-package Helpers
+package paginator
 
 import (
-	"key-rate-api/src/client"
+	"key-rate-api/internal/pkg/keyrate/client"
 	"math"
 )
 

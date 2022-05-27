@@ -69,7 +69,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/Controllers.Success"
+                                "$ref": "#/definitions/controllers.Success"
                             }
                         }
                     },
@@ -93,7 +93,18 @@ var doc = `{
         }
     },
     "definitions": {
-        "Controllers.Success": {
+        "client.KeyRates": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "rate": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.Success": {
             "type": "object",
             "properties": {
                 "current_page": {
@@ -116,17 +127,6 @@ var doc = `{
                 },
                 "total_pages": {
                     "type": "integer"
-                }
-            }
-        },
-        "client.KeyRates": {
-            "type": "object",
-            "properties": {
-                "date": {
-                    "type": "string"
-                },
-                "rate": {
-                    "type": "string"
                 }
             }
         }

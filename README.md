@@ -62,3 +62,5 @@ PARAMS | per_page=5 | Количество возвращаемых строк �
 
 
 Swagger http://localhost:8080/swagger/index.html
+
+Документация * https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?op=KeyRateXML

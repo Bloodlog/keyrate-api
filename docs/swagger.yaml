@@ -1,5 +1,12 @@
 definitions:
-  Controllers.Success:
+  client.KeyRates:
+    properties:
+      date:
+        type: string
+      rate:
+        type: string
+    type: object
+  controllers.Success:
     properties:
       current_page:
         type: integer
@@ -15,13 +22,6 @@ definitions:
         type: integer
       total_pages:
         type: integer
-    type: object
-  client.KeyRates:
-    properties:
-      date:
-        type: string
-      rate:
-        type: string
     type: object
 info:
   contact: {}
@@ -57,7 +57,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/Controllers.Success'
+              $ref: '#/definitions/controllers.Success'
             type: array
         "400":
           description: Bad Request

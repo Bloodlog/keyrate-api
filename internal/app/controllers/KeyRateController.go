@@ -1,8 +1,8 @@
-package Controllers
+package controllers
 
 import (
-	"key-rate-api/src/Helpers"
-	"key-rate-api/src/client"
+	"key-rate-api/internal/pkg/keyrate/client"
+	"key-rate-api/internal/pkg/paginator"
 	"log"
 	"net/http"
 	"strconv"
@@ -32,7 +32,6 @@ type Error struct {
 // @Param        from_date    query     string  false  "return keyrates from date"  Format(2006-01-02)
 // @Param        page    query     integer  false  "Page number"  Format(2)
 // @Param        per_page    query     integer  false  "Key rates per page"  Format(10)
-// @Param 			 last_key_rate query integer 0 "Force get last key rate. Max count retry 5" Format(1)
 // @Success      200  {array} Success
 // @Failure      400  error Error
 // @Failure      404
@@ -45,8 +44,6 @@ func KeyRate(c *gin.Context) {
 	currentPageNumber, _ := strconv.Atoi(currentPageRequest)
 	perPageRequest := c.DefaultQuery("per_page", "15")
 	PerPage, _ := strconv.Atoi(perPageRequest)
-	lastKeyRateRequest := c.DefaultQuery("last_key_rate", "0")
-	ForceLastKeyRate, _ := strconv.Atoi(lastKeyRateRequest)
 
 	fromDate, err := time.Parse(layout, fromDateRequest)
 	if err != nil {
@@ -57,7 +54,7 @@ func KeyRate(c *gin.Context) {
 		return
 	}
 
-	dataKeyRates, err := client.GetData(fromDate, time.Now())
+	dataKeyRates, err := client.Get(fromDate, time.Now())
 	if err != nil {
 		log.Println("error KeyRateByDate client")
 		log.Println(err)
@@ -67,28 +64,9 @@ func KeyRate(c *gin.Context) {
 		return
 	}
 
-	if ForceLastKeyRate == 1 {
-		maxTry := 5
-		for i := 0; i < maxTry; i++ {
-			fromDatesubDay := fromDate.AddDate(0, 0, -1)
-			dataKeyRates, err = client.GetData(fromDatesubDay, time.Now())
-			if err != nil {
-				log.Println("error KeyRateByDate client")
-				log.Println(err)
-				c.JSON(http.StatusInternalServerError, Error{
-					Errors: err,
-				})
-				return
-			}
-			if len(dataKeyRates) != 0 {
-				break
-			}
-		}
-	}
+	var result paginator.Pagineted
 
-	var result Helpers.Pagineted
-
-	result = Helpers.Paginate(&Helpers.Pages{
+	result = paginator.Paginate(&paginator.Pages{
 		Items:       dataKeyRates,
 		Total:       len(dataKeyRates),
 		PerPage:     PerPage,
