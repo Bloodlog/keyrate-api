@@ -1,7 +1,13 @@
-API цб ключевой ставки
+# API key rate of the central bank of the Russian Federation
+# API ключевая ставка Российской Федерации
 
-GET | v1/keyrate | возвращает ключевую ставку на сегодня
-Пример ответа:
+The service allows you to get key rates for a certain period in json format. The service takes information from the Central Bank of the Russian Federation. The service parses information in xml format and converts it to json format with pagination.
+
+Сервис позволяет получить ключевые ставки за некоторый период в формате json. Сервис берёт информацию у центрального банка Российской Федерации. Сервис парсит информацию в формате xml и преобразует её в json формат с возможностью постраничного вывода.
+
+GET | v1/keyrate | returns the key rate for today | возвращает ключевую ставку на сегодня 
+
+Response:
 ```
 {
     "current_page": 1,
@@ -19,7 +25,9 @@ GET | v1/keyrate | возвращает ключевую ставку на се�
  ]
 ```
 
-Если за текущий день нет ставки, ответ будет:
+If there is no set key rate for the current day: | Если за текущий день нет установленной ключевой ставки:
+
+Response:
 ```
 {
     "current_page": 1,
@@ -31,8 +39,9 @@ GET | v1/keyrate | возвращает ключевую ставку на се�
 }
 ```
 
-PARAMS | ?from_date=2021-12-01 | возвращает ключевую ставку от даты
-Пример ответа:
+PARAMS | ?from_date=2021-12-01 | returns key rate from date | возвращает ключевую ставку от даты
+
+Response:
 ```
 {
     "current_page": 2,
@@ -56,11 +65,11 @@ PARAMS | ?from_date=2021-12-01 | возвращает ключевую став�
     "total_pages": 10
 }
 ```
-PARAMS | page=2 | Возвращает страницу 2
+PARAMS | page=2 | Returns page 2 | Возвращает страницу 2
 
-PARAMS | per_page=5 | Количество возвращаемых строк на одну страницу
+PARAMS | per_page=5 | Number of returned rows per page | Количество возвращаемых строк на одну страницу
 
 
 Swagger http://localhost:8080/swagger/index.html
 
-Документация * https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?op=KeyRateXML
+Documentation of the Central Bank of the Russian Federation | Документация ЦБ РФ API * https://www.cbr.ru/DailyInfoWebServ/DailyInfo.asmx?op=KeyRateXML
