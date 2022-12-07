@@ -5,6 +5,31 @@ The service allows you to get key rates for a certain period in json format. The
 
 Сервис позволяет получить ключевые ставки за некоторый период в формате json. Сервис берёт информацию у центрального банка Российской Федерации. Сервис парсит информацию в формате xml и преобразует её в json формат с возможностью постраничного вывода.
 
+## Install
+1. Download packages:
+```
+make build
+```
+
+2. Change config:
+* docker/app/.env
+
+3. Run Swagger
+```
+make install-swag
+```
+
+```
+make swag
+```
+
+4. Run:
+```
+make run
+```
+
+## API
+
 GET | v1/keyrate | returns the key rate for today | возвращает ключевую ставку на сегодня 
 
 Response:

@@ -1,6 +1,7 @@
 build:
+	cp docker/app/.env.example docker/app/.env
 	go mod download
-run:build
+run:
 	go run cmd/app/main.go
 install-swag:
 	go install github.com/swaggo/swag/cmd/swag@latest
